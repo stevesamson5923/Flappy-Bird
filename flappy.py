@@ -21,10 +21,65 @@ pygame.transform.scale(bird[7],(WIDTH_BIRD,HEIGHT_BIRD))]
 
 pipes = [pygame.image.load('images/bottom pipe.png'),pygame.image.load('images/top pipe.png')]
 
+class Bird:
+    def __init__(self,x,y,width,height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.count = -1 
+        self.hit = False
+        self.score = 0
+    def draw(self,win):
+        win.blit(bird_fly[0],(self.x,self.y))
+    def update(self,win): 
+        pass
+
+class BG:
+    def __init__(self,x,y,width,height):
+        self.x = x 
+        self.y = y
+        self.width = width
+        self.height = height
+        self.bg = pygame.transform.scale(pygame.image.load('bg.jpg'),(self.width,self.height))
+        self.velx = 4
+    def draw(self,win):
+        win.blit(self.bg,(self.x,self.y))
+    def update(self,win):
+        self.x = self.x - self.velx
+        self.draw(win)
+
+class Pipes:
+    def __init__(self,x,y,width,height,velx,vely,pos):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height =height
+        self.pos = pos # 1 for top and 0 for bottom
+        self.pipe = pipes[self.pos]
+        self.velx = velx
+        self.vely = vely
+    def draw(self,win):
+        win.blit(self.pipe,(self.x,self.y))
+    def update(self,win):
+        pass
+
+bird = Bird(int(WIDTH*0.2),int(HEIGHT*0.2),WIDTH_BIRD,HEIGHT_BIRD)
+
+bg1 = BG(0,0,WIDTH,HEIGHT)
+bg2 = BG(bg1.x+WIDTH+1,0,WIDTH,HEIGHT)
+
 run = True
 while run:
+    bg1.update(win)
+    bg2.update(win)
+    bird.draw(win)
+    if bg1.x <= -WIDTH:
+        bg1.x = bg2.x + 500
+    if bg2.x <= -WIDTH:
+        bg2.x = bg1.x + WIDTH
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False        
-
+    pygame.display.update()
 pygame.quit()
